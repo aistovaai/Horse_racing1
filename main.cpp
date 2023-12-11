@@ -78,6 +78,10 @@ try
   }
 
   Text print = Text(Point(win_w / 2, win_h / 2), x);
+
+  print.set_font(FL_COURIER);
+  print.set_font_size(18);
+  
   results.attach(print);
 
   results.wait_for_button();

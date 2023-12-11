@@ -26,9 +26,7 @@ set(HEADERS
     ${LIB_DIR}/Graph_lib/Window.h
 )
 set(SOURCES
-
     cube.cpp
-
     Race.cpp
     main.cpp
     ${LIB_DIR}/Graph_lib/Graph.cpp

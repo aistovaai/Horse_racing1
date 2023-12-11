@@ -138,7 +138,6 @@ void lines(int win_w, int win_h)
     float horse_step = 360 / moves;
 
     lines_vec.push_back(new Line{start_1, start_2});
-    lines_vec[0].set_style(FL_DOT);
 
     for (int i = 1; i < moves; ++i)
     {
@@ -150,24 +149,40 @@ void lines(int win_w, int win_h)
 
         lines_vec.push_back(new Line{start_new_1, start_new_2});
     }
+
+    lines_vec[0].set_style(FL_DOT);
+    lines_vec[12].set_style(FL_DOT);
+
+    lines_vec[0].set_color(FL_RED);
+    lines_vec[12].set_color(FL_RED);
 }
 
 void draw_point_table(int win_w, int win_h)
 {
-    Point player_1(win_w / 2 - std::min(win_w, win_h) * 9 / 12, win_h / 2 + win_h / 4);
-    Point player_2(win_w / 2 - std::min(win_w, win_h) * 9 / 12, win_h / 2 + win_h / 3);
-    Point player_3(win_w / 2 - std::min(win_w, win_h) * 9 / 12, win_h / 2 - win_h / 3);
-    Point player_4(win_w / 2 - std::min(win_w, win_h) * 9 / 12, win_h / 2 - win_h / 4);
+    Point player_1(win_w / 2 - std::min(win_w, win_h) * 8 / 11, win_h / 2 + win_h / 4);
+    Point player_2(win_w / 2 - std::min(win_w, win_h) * 8 / 11, win_h / 2 + win_h / 3);
+    Point player_3(win_w / 2 - std::min(win_w, win_h) * 8 / 11, win_h / 2 - win_h / 3);
+    Point player_4(win_w / 2 - std::min(win_w, win_h) * 8 / 11, win_h / 2 - win_h / 4);
 
     text_vec.push_back(new Text(player_1, "blue points: 0"));   // blue
     text_vec.push_back(new Text(player_2, "red points: 0"));    // red
     text_vec.push_back(new Text(player_3, "yellow points: 0")); // yellow
     text_vec.push_back(new Text(player_4, "green points: 0"));  // green
+
+    for (int i = 0; i < text_vec.size(); i++)
+    {
+        text_vec[i].set_font(FL_COURIER);
+        text_vec[i].set_font_size(18);
+    }
 }
 
 void change_text(int player, int steps_now)
 {
     std::string x = string_vec[player] + " " + std::to_string(steps_vec[player] + steps_now);
+
+    text_vec[player].set_font(FL_COURIER);
+    text_vec[player].set_font_size(18);
+
     text_vec[player].set_label(x);
 }
 
