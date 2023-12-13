@@ -112,7 +112,7 @@ try
 
   win.hide();
 
-  Simple_window result_screen(Point(0, 0), win_w, win_h, "Results");
+  My_cool_window result_screen(Point(0, 0), win_w, win_h, "Results");
 
   std::string x = results(p1, p2, p3, p4);
 
