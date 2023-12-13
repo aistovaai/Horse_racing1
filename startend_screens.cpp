@@ -37,11 +37,11 @@ void start_of_the_game()
     rules_window.hide();
 }
 
-void end_of_the_game(int win_w, int win_h, int p1, int p2, int p3, int p4)
+void end_of_the_game(int win_w, int win_h, std::vector<int> players)
 {
     My_cool_window result_screen(Point(0, 0), win_w, win_h, "Results");
 
-    std::string x = results(p1, p2, p3, p4);
+    std::string x = results(players[0], players[1], players[2], players[3]);
 
     Text print = Text(Point(win_w / 2 - 50, win_h / 2), x);
 

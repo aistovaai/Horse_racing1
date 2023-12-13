@@ -20,15 +20,10 @@ int main()
 try
 {
   srand(time(NULL));
-
   int win_w = x_max();
   int win_h = y_max();
   int player = 0;
-
-  int p1 = 0;
-  int p2 = 0;
-  int p3 = 0;
-  int p4 = 0;
+  std::vector<int> players{0, 0, 0, 0};
   int trap_point = 12;
 
   start_of_the_game();
@@ -36,19 +31,16 @@ try
   My_window win(Point(0, 0), win_w, win_h, "Race");
   Point cube_place{win_w / 2 - 64, win_h / 2 - 64};
   Field field{win_w, win_h};
+  Image trap{Point(win_w * 31 / 48, win_h * 2 / 4 - 75), "trap.png"};
 
   field.attach_pole(win);
-
-  Image trap{Point(win_w * 31 / 48, win_h * 2 / 4 - 75), "trap.png"};
   win.attach(trap);
   win.wait_for_button();
 
   while (win.Fl_wait())
   {
     if (field.coordinates_knights_vec[player].can_move() == false)
-    {
       field.coordinates_knights_vec[player].set_move();
-    }
     else
     {
       int cube_result = random();
@@ -58,33 +50,23 @@ try
       win.wait_for_button();
 
       game_step(field, player, cube_result);
-
-      p1 = field.current_steps(0);
-      p2 = field.current_steps(1);
-      p3 = field.current_steps(2);
-      p4 = field.current_steps(3);
+      players[player] = field.current_steps(player);
 
       if (field.current_steps(player) == trap_point)
-      {
         field.coordinates_knights_vec[player].set_move();
-      }
+
       win.wait_for_button();
     }
-
     player++;
 
     if (player == 4)
-    {
       player = 0;
-    }
 
-    if (((p1 >= 24) && (p2 >= 24) && (p3 >= 24) && (p4 >= 24)))
+    if (((players[0] >= 24) && (players[1] >= 24) && (players[2] >= 24) && (players[3] >= 24)))
       break;
   }
-
   win.hide();
-
-  end_of_the_game(win_w, win_h, p1, p2, p3, p4);
+  end_of_the_game(win_w, win_h, players);
 }
 catch (std::exception &e)
 {
