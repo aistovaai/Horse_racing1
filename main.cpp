@@ -9,82 +9,121 @@
 
 using namespace Graph_lib;
 
+std::string results(int blue, int red, int yellow, int green)
+{
+
+  std::string x = "";
+  int winner = std::max({blue, red, yellow, green});
+
+  if (winner == blue)
+  {
+    x += "Blue ";
+  }
+  if (winner == red)
+  {
+    x += "Red ";
+  }
+  if (winner == yellow)
+  {
+    x += "Yellow ";
+  }
+  if (winner == green)
+  {
+    x += "Green ";
+  }
+  x += "won!";
+  return x;
+}
+
 int main()
 try
 {
-  int win_w = 1200;
-  int win_h = 800;
+
+  Very_Simple_window rules_window(Point(x_max() / 2, y_max() / 2), 985, 393, "Rules");
+  Image rules(Point(0, 0), "game_rules1.png");
+  rules_window.attach(rules);
+  rules_window.wait_for_button();
+  rules_window.hide();
+
+  srand(time(NULL));
+
+  int win_w = x_max();
+  int win_h = y_max();
   int player = 0;
 
   int p1 = 0;
   int p2 = 0;
   int p3 = 0;
   int p4 = 0;
-  std::string x = "";
+  int trap_point = 12;
 
   My_window win(Point(0, 0), win_w, win_h, "Race");
   Point cube_place{win_w / 2 - 64, win_h / 2 - 64};
+  Field field{win_w, win_h};
 
-  draw_pole(win, win_w, win_h); // здесь нужен двойной цикл while true и for
+  field.attach_pole(win);
+
+  Image trap{Point(win_w * 31 / 48, win_h * 2 / 4 - 75), "trap.png"};
+  win.attach(trap);
   win.wait_for_button();
 
-  while (not((p1 >= 24) & (p2 >= 24) & (p3 >= 24) & (p4 >= 24)))
+  while (win.Fl_wait())
   {
-    int cube_result = random();
-    Image cube{cube_place, cube_name(cube_result)};
+    if (field.coordinates_knights_vec[player].can_move() == false)
+    {
+      field.coordinates_knights_vec[player].set_move();
+    }
+    else
+    {
 
-    win.attach(cube);
-    win.wait_for_button();
+      int cube_result = random();
+      Image cube{cube_place, cube_name(cube_result)};
+
+      win.attach(cube);
+
+      win.wait_for_button();
+
+      field.change_text(player, cube_result);
+
+      field.move_knights(win_w, win_h, player, cube_result);
+
+      p1 = field.current_steps(0);
+      p2 = field.current_steps(1);
+      p3 = field.current_steps(2);
+      p4 = field.current_steps(3);
+
+      if (field.current_steps(player) == trap_point)
+      {
+        field.coordinates_knights_vec[player].set_move();
+      }
+      win.wait_for_button();
+    }
+
+    player++;
 
     if (player == 4)
     {
       player = 0;
     }
 
-    p1 = steps_check(0);
-    p2 = steps_check(1);
-    p3 = steps_check(2);
-    p4 = steps_check(3);
-
-    change_text(player, cube_result);
-
-    move_knights(win_w, win_h, player, cube_result);
-
-    win.wait_for_button();
-    player++;
+    if (((p1 >= 24) && (p2 >= 24) && (p3 >= 24) && (p4 >= 24)))
+      break;
   }
-
-  int player1 = std::max({p1, p2, p3, p4});
 
   win.hide();
 
-  My_window results(Point(0, 0), win_w, win_h, "Results");
+  Simple_window result_screen(Point(0, 0), win_w, win_h, "Results");
 
-  if (player1 == p1)
-  {
-    x = "Blue won!";
-  }
-  if (player1 == p2)
-  {
-    x = "Red won!";
-  }
-  if (player1 == p3)
-  {
-    x = "Yellow won!";
-  }
-  if (player1 == p4)
-  {
-    x = "Green won!";
-  }
+  std::string x = results(p1, p2, p3, p4);
 
-  Text print = Text(Point(win_w / 2, win_h / 2), x);
+  Text print = Text(Point(win_w / 2 - 50, win_h / 2), x);
 
   print.set_font(FL_COURIER);
-  print.set_font_size(18);
-  
-  results.attach(print);
+  print.set_font_size(20);
 
-  results.wait_for_button();
+  result_screen.attach(print);
+
+  result_screen.wait_for_button();
 }
 catch (std::exception &e)
 {

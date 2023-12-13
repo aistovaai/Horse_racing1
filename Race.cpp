@@ -9,15 +9,6 @@ using namespace Graph_lib;
 
 int moves = 24;
 
-Vector_ref<Circle> circles_vec;
-Vector_ref<Line> lines_vec;
-Vector_ref<Mark> marks_vec;
-Vector_ref<Knight> coordinates_knights_vec;
-Vector_ref<Text> text_vec;
-
-std::vector<int> steps_vec(4);
-std::vector<std::string> string_vec = {"blue points:", "red points:", "yellow points:", "green points:"};
-
 int Knight::x()
 {
     return xy.x;
@@ -45,7 +36,7 @@ void Knight::move(int dx, int dy)
     xy.y += dy;
 }
 
-void coordinates_knights(int win_w, int win_h)
+void Field::create_knights(int win_w, int win_h)
 {
     Point player_1(win_w / 2 - std::min(win_w, win_h) / 4, win_h / 2);
     Point player_2(win_w / 2 - std::min(win_w, win_h) * 4 / 12, win_h / 2);
@@ -63,7 +54,7 @@ void coordinates_knights(int win_w, int win_h)
     coordinates_knights_vec.push_back(new Knight(player_4, "Knight5.png"));
 }
 
-void move_knights(int win_w, int win_h, int player, int steps)
+void Field::move_knights(int win_w, int win_h, int player, int steps)
 {
     float up_radius = std::min(win_w, win_h) / 2;
     float down_radius = std::min(win_w, win_h) / 4; // неловко вышло
@@ -117,16 +108,13 @@ void move_knights(int win_w, int win_h, int player, int steps)
     }
 }
 
-void circles(int win_w, int win_h)
+void Field::create_circles(int win_w, int win_h)
 {
-    Graph_lib::Circle down(Point(win_w / 2, win_h / 2), std::min(win_w, win_h) / 4);
-    Graph_lib::Circle up(Point(win_w / 2, win_h / 2), std::min(win_w, win_h) / 2);
-
     circles_vec.push_back(new Circle(Point(win_w / 2, win_h / 2), std::min(win_w, win_h) / 4));
     circles_vec.push_back(new Circle(Point(win_w / 2, win_h / 2), std::min(win_w, win_h) / 2));
 }
 
-void lines(int win_w, int win_h)
+void Field::create_lines(int win_w, int win_h)
 {
     Point center = Point(win_w / 2, win_h / 2);
     float up_radius = std::min(win_w, win_h) / 2;
@@ -157,17 +145,17 @@ void lines(int win_w, int win_h)
     lines_vec[12].set_color(FL_RED);
 }
 
-void draw_point_table(int win_w, int win_h)
+void Field::draw_point_table(int win_w, int win_h)
 {
     Point player_1(win_w / 2 - std::min(win_w, win_h) * 8 / 11, win_h / 2 + win_h / 4);
     Point player_2(win_w / 2 - std::min(win_w, win_h) * 8 / 11, win_h / 2 + win_h / 3);
     Point player_3(win_w / 2 - std::min(win_w, win_h) * 8 / 11, win_h / 2 - win_h / 3);
     Point player_4(win_w / 2 - std::min(win_w, win_h) * 8 / 11, win_h / 2 - win_h / 4);
 
-    text_vec.push_back(new Text(player_1, "blue points: 0"));   // blue
-    text_vec.push_back(new Text(player_2, "red points: 0"));    // red
-    text_vec.push_back(new Text(player_3, "yellow points: 0")); // yellow
-    text_vec.push_back(new Text(player_4, "green points: 0"));  // green
+    text_vec.push_back(new Text(player_1, "blue points: "));   // blue
+    text_vec.push_back(new Text(player_2, "red points: "));    // red
+    text_vec.push_back(new Text(player_3, "yellow points: ")); // yellow
+    text_vec.push_back(new Text(player_4, "green points: "));  // green
 
     for (int i = 0; i < text_vec.size(); i++)
     {
@@ -176,7 +164,7 @@ void draw_point_table(int win_w, int win_h)
     }
 }
 
-void change_text(int player, int steps_now)
+void Field::change_text(int player, int steps_now)
 {
     std::string x = string_vec[player] + " " + std::to_string(steps_vec[player] + steps_now);
 
@@ -186,12 +174,12 @@ void change_text(int player, int steps_now)
     text_vec[player].set_label(x);
 }
 
-void draw_pole(My_window &win, int win_w, int win_h)
+void Field::attach_pole(My_window &win)
 {
-    lines(win_w, win_h);
-    coordinates_knights(win_w, win_h);
-    circles(win_w, win_h);
     draw_point_table(win_w, win_h);
+    create_knights(win_w, win_h);
+    create_circles(win_w, win_h);
+    create_lines(win_w, win_h);
 
     for (int i = 0; i < moves; ++i)
     {
@@ -215,7 +203,7 @@ void draw_pole(My_window &win, int win_w, int win_h)
     }
 }
 
-int steps_check(int player)
+int Field::current_steps(int player)
 {
     return (steps_vec[player]);
 }
