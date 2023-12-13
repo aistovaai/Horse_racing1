@@ -18,6 +18,7 @@ include_directories(
 set(HEADERS
     Race.h
     cube.h
+    startend_screens.h
     ${LIB_DIR}/Graph_lib/fltk.h
     ${LIB_DIR}/Graph_lib/Graph.h
     ${LIB_DIR}/Graph_lib/GUI.h
@@ -29,6 +30,7 @@ set(SOURCES
     cube.cpp
     Race.cpp
     main.cpp
+    startend_screens.cpp
     ${LIB_DIR}/Graph_lib/Graph.cpp
     ${LIB_DIR}/Graph_lib/GUI.cpp
     ${LIB_DIR}/Graph_lib/Window.cpp

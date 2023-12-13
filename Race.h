@@ -1,3 +1,6 @@
+#ifndef RACE_H
+#pragma once
+
 #include <Graph_lib/Simple_window.h>
 using namespace Graph_lib;
 #include <iostream>
@@ -37,12 +40,6 @@ private:
 };
 struct My_cool_window : Graph_lib::Window
 {
-    // My_cool_window(Graph_lib::Point xy, int w, int h, const std::string& title)
-    //     : Graph_lib::Window{xy, w, h, title}, next_button{Graph_lib::Point{x_max() - 70, 0}, 70, 20, "Next", cb_next}
-    // {
-    //   attach(next_button);
-    // }
-
     My_cool_window(Graph_lib::Point xy, int w, int h, const std::string &title) : Graph_lib::Window{xy, w, h, title}
     {
     }
@@ -178,3 +175,5 @@ private:
     std::vector<int> steps_vec{0, 0, 0, 0};
     std::vector<std::string> string_vec{"blue points:", "red points:", "yellow points:", "green points:"};
 };
+
+#endif

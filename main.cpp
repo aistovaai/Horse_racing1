@@ -6,45 +6,19 @@
 #include <Graph_lib/Simple_window.h>
 #include "cube.h"
 #include "Race.h"
+#include "startend_screens.h"
 
 using namespace Graph_lib;
 
-std::string results(int blue, int red, int yellow, int green)
+void game_step(Field &field, int player, int cube_result)
 {
-
-  std::string x = "";
-  int winner = std::max({blue, red, yellow, green});
-
-  if (winner == blue)
-  {
-    x += "Blue ";
-  }
-  if (winner == red)
-  {
-    x += "Red ";
-  }
-  if (winner == yellow)
-  {
-    x += "Yellow ";
-  }
-  if (winner == green)
-  {
-    x += "Green ";
-  }
-  x += "won!";
-  return x;
+  field.change_text(player, cube_result);
+  field.move_knights(field.win_w_value(), field.win_h_value(), player, cube_result);
 }
 
 int main()
 try
 {
-
-  Very_Simple_window rules_window(Point(x_max() / 2, y_max() / 2), 985, 393, "Rules");
-  Image rules(Point(0, 0), "game_rules1.png");
-  rules_window.attach(rules);
-  rules_window.wait_for_button();
-  rules_window.hide();
-
   srand(time(NULL));
 
   int win_w = x_max();
@@ -56,6 +30,8 @@ try
   int p3 = 0;
   int p4 = 0;
   int trap_point = 12;
+
+  start_of_the_game();
 
   My_window win(Point(0, 0), win_w, win_h, "Race");
   Point cube_place{win_w / 2 - 64, win_h / 2 - 64};
@@ -75,17 +51,13 @@ try
     }
     else
     {
-
       int cube_result = random();
       Image cube{cube_place, cube_name(cube_result)};
 
       win.attach(cube);
-
       win.wait_for_button();
 
-      field.change_text(player, cube_result);
-
-      field.move_knights(win_w, win_h, player, cube_result);
+      game_step(field, player, cube_result);
 
       p1 = field.current_steps(0);
       p2 = field.current_steps(1);
@@ -112,18 +84,7 @@ try
 
   win.hide();
 
-  My_cool_window result_screen(Point(0, 0), win_w, win_h, "Results");
-
-  std::string x = results(p1, p2, p3, p4);
-
-  Text print = Text(Point(win_w / 2 - 50, win_h / 2), x);
-
-  print.set_font(FL_COURIER);
-  print.set_font_size(20);
-
-  result_screen.attach(print);
-
-  result_screen.wait_for_button();
+  end_of_the_game(win_w, win_h, p1, p2, p3, p4);
 }
 catch (std::exception &e)
 {
